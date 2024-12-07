@@ -1,0 +1,104 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Utilisateur {
+  id            Int             @id @default(autoincrement())
+  prenom        String
+  nom           String
+  telephone     String?         @unique
+  email         String          @unique
+  password      String
+  role          UtilisateurRole
+  status        Boolean         @default(true)
+  documents     Document[]
+  entretiens    Entretien[]
+  incidents     Incident[]
+  TypeEntretien TypeEntretien[]
+  vehicules     Vehicule[]
+
+  @@map("utilisateurs")
+}
+
+model TypeEntretien {
+  id            Int          @id @default(autoincrement())
+  nom           String
+  status        Boolean      @default(true)
+  utilisateurId Int?
+  entretiens    Entretien[]
+  utilisateur   Utilisateur? @relation(fields: [utilisateurId], references: [id])
+
+  @@map("typeEntretiens")
+}
+
+model Incident {
+  id               Int          @id @default(autoincrement())
+  date_incident    DateTime
+  description      String
+  gravite          String
+  entretien_requis Boolean      @default(false)
+  statut           String
+  vehiculeId       Int?
+  utilisateurId    Int?
+  utilisateur      Utilisateur? @relation(fields: [utilisateurId], references: [id])
+  vehicule         Vehicule?    @relation(fields: [vehiculeId], references: [id])
+
+  @@map("incidents")
+}
+
+model Document {
+  id             Int          @id @default(autoincrement())
+  nom            String
+  debut_validite DateTime
+  fin_validite   DateTime
+  cout           Decimal      @db.Decimal(10, 2)
+  renouvellement DateTime
+  vehiculeId     Int?
+  utilisateurId  Int?
+  utilisateur    Utilisateur? @relation(fields: [utilisateurId], references: [id])
+  vehicule       Vehicule?    @relation(fields: [vehiculeId], references: [id])
+
+  @@map("documents")
+}
+
+model Entretien {
+  id              Int            @id @default(autoincrement())
+  date            DateTime
+  cout            Decimal        @db.Decimal(10, 2)
+  utilisateurId   Int?
+  typeEntretienId Int?
+  vehiculeId      Int?
+  typeEntretien   TypeEntretien? @relation(fields: [typeEntretienId], references: [id])
+  utilisateur     Utilisateur?   @relation(fields: [utilisateurId], references: [id])
+  vehicule        Vehicule?      @relation(fields: [vehiculeId], references: [id])
+
+  @@map("entretiens")
+}
+
+model Vehicule {
+  id                   Int          @id @default(autoincrement())
+  marque               String
+  modele               String
+  immatriculation      String       @unique
+  annee_de_fabrication Int          // Stocke uniquement l'année sous forme d'un entier (e.g., 2024)
+  type_de_carburant    String
+  kilometrage          Int?
+  statut               String
+  utilisateurId        Int?
+  utilisateur          Utilisateur? @relation(fields: [utilisateurId], references: [id])
+  incidents            Incident[]
+  documents            Document[]
+  entretiens           Entretien[]
+
+  @@map("vehicules")
+}
+
+enum UtilisateurRole {
+  ADMIN
+  GESTIONNAIRE
+}
