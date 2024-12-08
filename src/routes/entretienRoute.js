@@ -14,6 +14,6 @@ routere.get('/entretien/:id',authenticateToken, afficherEntretienParId);
 
 routere.put('/entretien/:id',authenticateToken, entretienValidator.mettreAJourEntretien, validate, mettreAJourEntretien);
 
-routere.delete('/entretien/:id',authenticateToken, entretienValidator.mettreAJourEntretien[0], validate, supprimerEntretien);
+routere.delete('/entretien/:id',authenticateToken, supprimerEntretien);
 
 export { routere };
