@@ -26,7 +26,7 @@ git clone https://github.com/Zoubeir7/suivi-vehicule-backend.git
 ### **Accédez au dossier du projet :**
 
 ```bash
-cd suivi-vehicule-backend
+cd backend-vehicule tracking
 ```
 
 ### **Installez les dépendances :**
