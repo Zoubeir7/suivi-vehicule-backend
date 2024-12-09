@@ -1,9 +1,9 @@
 import prisma from '../config/prisma.js';
-import jwt from 'jsonwebtoken';/////////////
+import jwt from 'jsonwebtoken';
 
 // Créer un entretien
 const creerEntretien = async (req, res) => {
-  const token = req.headers.authorization.split(' ')[1];//////////////
+  const token = req.headers.authorization.split(' ')[1];
   const { date, cout, utilisateurId, typeEntretienId, vehiculeId } = req.body;
 
   try {
@@ -109,15 +109,15 @@ const afficherEntretienParId = async (req, res) => {
 
 // Mettre à jour un entretien
 const mettreAJourEntretien = async (req, res) => {
-  const token = req.headers.authorization.split(' ')[1];//////////////
+  const token = req.headers.authorization.split(' ')[1];
   const { id } = req.params;
   const { date, cout, utilisateurId, typeEntretienId, vehiculeId } = req.body;
  
  
 
   try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);/////////////////
-    const id_user = decoded.userId;/////////////////////
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const id_user = decoded.userId;
     const entretienExiste = await prisma.entretien.findUnique({
       where: { id: Number(id) },
     });
